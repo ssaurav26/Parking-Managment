@@ -1,0 +1,15 @@
+.rc-table {
+  background-color: #FFF;
+}
+
+.rc-table th {
+  background: #f0f3f5!important;
+  font-weight: bold;
+  transition: background .3s ease;
+}
+
+.modalbodystyle{
+    overflow: auto;
+    width:500px !important;
+    height:304px !important;
+}
