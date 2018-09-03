@@ -31,14 +31,15 @@ class FormData extends Component {
       sequence : [],
       parkingData: [],
       open : false,
-      totalCar: undefined,
-      parkingSpace: undefined,
+      totalCar: '',
+      parkingSpace: '',
       defaultValue : 0,
       slot: '',
 
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.requiredDataGenerator = this.requiredDataGenerator.bind(this);
+    this.createData = this.createData.bind(this);
   };
   componentDidMount() {
     // console.log(localStorage.getItem("parkingData"))
@@ -110,18 +111,32 @@ class FormData extends Component {
     };
     if(selection == 'submitIntialData'){
       var msg = this.requiredDataGenerator(this.state.parkingSpace, this.state.totalCar);
-        if(msg == true){
           this.setState({ open : false });
-        }
+    
     }
-    if(selection == 'reset'){
+    if(selection == 'resetMain'){
       this.setState({carName : '', carNumber: '', color: 'black', slot: '' })
+    }
+    if(selection == 'resetModal'){
+      this.setState({totalCar:'', parkingSpace:''});
     }
   }
 
 requiredDataGenerator(space,car){
-    var car = parseInt(car);
-    var space = parseInt(space);
+
+    var carData = parseInt(car);
+    var spaceData = parseInt(space);
+    if(carData>spaceData){
+    var carDataNew=spaceData;
+    this.createData(spaceData,carDataNew)
+    }
+    if(carData<=spaceData){
+    this.createData(carData,spaceData)
+    }
+  }
+  createData(spaceData,carData){
+    var car = carData;
+    var space = spaceData;
     var parkingData= [];
     var sequence = [];
     parkingData.length = space;
@@ -241,7 +256,7 @@ requiredDataGenerator(space,car){
             </FormGroup>
               <CardFooter>
                 <Button type="submit" size="sm" color="primary" disabled = { !enabledBlend }  name="submitPref" onClick={this.handleSubmit}><i className="fa fa-dot-circle-o"></i> Submit</Button>
-                <Button type="reset" size="sm" color="danger" name="reset" onClick={this.handleSubmit}><i className="fa fa-ban"></i> Reset</Button>
+                <Button type="resetMain" size="sm" color="danger" name="reset" onClick={this.handleSubmit}><i className="fa fa-ban"></i> Reset</Button>
               </CardFooter>
             </Form>
             </CardBody>
@@ -261,17 +276,17 @@ requiredDataGenerator(space,car){
                   </CardHeader>
                   <FormGroup>
                     <Label htmlFor="parkingSpace">Total Parking Space</Label>
-                    <Input type="number" min={0} name="parkingSpace" onChange={this.handleChange.bind(this)} placeholder="Enter number of Parking Space" required />
+                    <Input type="number" min={0} name="parkingSpace" onChange={this.handleChange.bind(this)} value={this.state.parkingSpace} placeholder="Enter number of Parking Space" required />
                   </FormGroup>
                   <FormGroup>
                     <Label htmlFor="totalCar">Total number of Car </Label>
-                    <Input type="number" name="totalCar" onChange={this.handleChange.bind(this)} placeholder="Enter total numbe of car in parking lot" required />
+                    <Input type="number" name="totalCar" onChange={this.handleChange.bind(this)} placeholder="Enter total numbe of car in parking lot" value={this.state.totalCar} required />
                   </FormGroup>
                 </CardBody>
               </Card>
             </Col>
           </ModalBody>
-          <Button className="float-right" type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
+          <Button type="resetModal" size="sm" color="danger" name="resetModal" onClick={this.handleSubmit}><i className="fa fa-ban"></i> Reset</Button>
           <Button className="float-right" name="submitIntialData" size="sm" color="success" onClick={this.handleSubmit}><i className="fa fa-ban"></i>Submit</Button>
         </Modal>
         <ToastContainer/>
